@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ReadCPUInfo
 {
-    class Program
+    partial class Program
     {
         /// <summary>
         /// 
@@ -52,39 +52,39 @@ namespace ReadCPUInfo
             Dictionary<Regex, Action<string>> rules = new Dictionary<Regex, Action<string>>()
             {
                 {
-                    new Regex(@"^Serial\s+:\s + (.+)"),  serialno =>
+                    new Regex(@"^Serial\s+:\s(.+)"),  serialno =>
                     {
                         _serialNo = serialno;
                         Console.WriteLine($"{nameof(_serialNo)} : {_serialNo}");
                     }
                 },
                 {
-                    new Regex(@"^Hardware\s+:\s + (.+)"),  hardware =>
+                    new Regex(@"^Hardware\s+:\s(.+)"),  hardware =>
                     {
                         _hardware = hardware;
                         Console.WriteLine($"{nameof(_hardware)} : {_hardware}");
                     }
                 },
                 {
-                    new Regex(@"^vendor_id\s+:\s + (.+)"),  vendor_id =>
+                    new Regex(@"^vendor_id\s+:\s(.+)"),  vendor_id =>
                     {
                         Console.WriteLine($"{nameof(vendor_id)} : {vendor_id}");
                     }
                 },
                 {
-                    new Regex(@"^cpu family\s+:\s + (.+)"),  cpu_family =>
+                    new Regex(@"^cpu family\s+:\s(.+)"),  cpu_family =>
                     {
                         Console.WriteLine($"{nameof(cpu_family)} : {cpu_family}");
                     }
                 },
                 {
-                    new Regex(@"^model\s+:\s + (.+)"),  model =>
+                    new Regex(@"^model\s+:\s(.+)"),  model =>
                     {
                         Console.WriteLine($"{nameof(model)} : {model}");
                     }
                 },
                 {
-                    new Regex(@"^model name\s+:\s + (.+)"),  model_name =>
+                    new Regex(@"^model name\s+:\s(.+)"),  model_name =>
                     {
                         Console.WriteLine($"{nameof(model_name)} : {model_name}");
                     }
@@ -95,15 +95,16 @@ namespace ReadCPUInfo
             {
                 foreach (var rule in rules)
                 {
-                    Match match = rule.Key.Match(cpuInfoLine);
-                    if (match.Groups[0].Success)
+                    if (!rule.Key.IsMatch(cpuInfoLine))
                     {
-                        string value = match.Groups[1].Value;
-                        rule.Value.Invoke(value);
+                        continue;
                     }
+
+                    Match match = rule.Key.Match(cpuInfoLine);
+                    string value = match.Groups[1].Value;
+                    rule.Value?.Invoke(value);
                 }
             }
-
         }
 
         /// <summary>
@@ -119,14 +120,14 @@ namespace ReadCPUInfo
                     new Regex(@"^Serial\s+:\s(.+)"),  serialno =>
                     {
                         _serialNo = serialno;
-                        Console.WriteLine($"{nameof(_serialNo)} : {_serialNo}");
+                        Console.WriteLine($"{nameof(serialno)} : {serialno}");
                     }
                 },
                 {
                 new Regex(@"^Hardware\s+:\s(.+)"),  hardware =>
                 {
                     _hardware = hardware;
-                    Console.WriteLine($"{nameof(_hardware)} : {_hardware}");
+                    Console.WriteLine($"{nameof(hardware)} : {hardware}");
                 }
                 },
                 {
@@ -165,17 +166,16 @@ namespace ReadCPUInfo
             {
                 foreach (var rule in rules)
                 {
-                    if (!rule.Key.IsMatch(cpuInfoLine)){
+                    if (!rule.Key.IsMatch(cpuInfoLine))
+                    {
                         continue;
-
                     }
 
                     Match match = rule.Key.Match(cpuInfoLine);
                     string value = match.Groups[1].Value;
-                    rule.Value.Invoke(value);
+                    rule.Value?.Invoke(value);
                 }
             }
-
         }
 
         /// <summary>
