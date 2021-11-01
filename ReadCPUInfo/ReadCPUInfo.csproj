@@ -5,4 +5,19 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="proc_cpuinfo.log" />
+    <None Remove="proc_cpuinfo_sample.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Include="proc_cpuinfo_sample.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="proc_cpuinfo.log">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
